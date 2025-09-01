@@ -47,12 +47,14 @@
     <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
         <h3 class="text-lg font-medium text-gray-900">SF9 Preview - Grade 7 Section A | 1st Quarter</h3>
         <div class="flex space-x-2">
-            <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">Download All PDF</button>
-            <button class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm">Print All</button>
+            <a href="{{ route('excel.sf9') }}" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded text-sm inline-flex items-center">
+                <i class="fas fa-file-excel mr-1"></i>Download Excel
+            </a>
+            <a href="{{ route('excel.sf9.bulk') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded text-sm inline-flex items-center">
+                <i class="fas fa-download mr-1"></i>Bulk Download
+            </a>
         </div>
     </div>
-    
-    <!-- SF9 Form Template -->
     <div class="p-6">
         <div class="border border-gray-300 p-6 bg-white" style="font-family: 'Times New Roman', serif;">
             <!-- Header -->
@@ -262,11 +264,17 @@
                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Complete</span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-center">
-                        <div class="flex justify-center space-x-2">
-                            <button class="text-blue-600 hover:text-blue-900 text-sm">View</button>
-                            <button class="text-green-600 hover:text-green-900 text-sm">Download PDF</button>
-                            <button class="text-purple-600 hover:text-purple-900 text-sm">Print</button>
-                        </div>
+                        <div class="flex space-x-3">
+                        <a href="{{ route('excel.sf9') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm font-medium transition duration-200 inline-flex items-center">
+                            <i class="fas fa-file-excel mr-2"></i>Download Excel
+                        </a>
+                        <a href="{{ route('excel.sf9.bulk') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-medium transition duration-200 inline-flex items-center">
+                            <i class="fas fa-download mr-2"></i>Bulk Download
+                        </a>
+                        <button class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded text-sm font-medium transition duration-200">
+                            <i class="fas fa-print mr-2"></i>Print Preview
+                        </button>
+                    </div>
                     </td>
                 </tr>
                 <tr>

@@ -2,64 +2,157 @@
 
 @section('content')
 <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-900">Adviser Dashboard</h1>
-    <p class="text-gray-600">Welcome to the DepEd Learner Information System</p>
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p class="text-blue-600 text-sm">304866 - Maharlika National High School</p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <button class="bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded text-sm">
+                Explore
+                <svg class="inline w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
 </div>
 
-<!-- Quick Stats -->
-<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
-        <div class="flex items-center">
-            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                </svg>
-            </div>
-            <div class="ml-4">
-                <h2 class="text-sm font-medium text-gray-500">My Classes</h2>
-                <p class="text-2xl font-bold text-gray-900">3</p>
+<!-- Date Selector -->
+<div class="mb-6">
+    <div class="flex items-center justify-between">
+        <div class="text-sm text-gray-600">
+            <span>Today</span>
+            <div class="font-medium text-gray-900">Sep 1, SY 2025-2026</div>
+        </div>
+        <div class="flex items-center space-x-2">
+            <select class="border border-gray-300 rounded px-3 py-2 text-sm bg-white">
+                <option>Sep 1, SY 2025-2026</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Enrollment Overview -->
+<div class="bg-white rounded-lg shadow border border-gray-200 mb-8">
+    <div class="px-6 py-4 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium text-gray-900">Enrollment</h3>
+            <div class="flex space-x-4">
+                <button class="text-blue-600 border-b-2 border-blue-600 px-2 py-1 text-sm font-medium">Overview</button>
+                <button class="text-gray-600 hover:text-gray-900 px-2 py-1 text-sm font-medium">Summary</button>
             </div>
         </div>
     </div>
     
-    <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
-        <div class="flex items-center">
-            <div class="p-3 rounded-full bg-green-100 text-green-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                </svg>
-            </div>
-            <div class="ml-4">
-                <h2 class="text-sm font-medium text-gray-500">Total Students</h2>
-                <p class="text-2xl font-bold text-gray-900">127</p>
-            </div>
-        </div>
-    </div>
-    
-    <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
-        <div class="flex items-center">
-            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-            </div>
-            <div class="ml-4">
-                <h2 class="text-sm font-medium text-gray-500">Pending Forms</h2>
-                <p class="text-2xl font-bold text-gray-900">8</p>
+    <!-- Total Enrollment Card -->
+    <div class="p-6">
+        <div class="text-center mb-6">
+            <div class="text-sm text-gray-600 mb-2">Total Enrollment</div>
+            <div class="text-6xl font-bold text-gray-900 mb-4">420</div>
+            <div class="flex justify-center space-x-8">
+                <div class="text-center">
+                    <div class="text-sm text-gray-600">Male</div>
+                    <div class="text-2xl font-bold text-blue-600">192</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-sm text-gray-600">Female</div>
+                    <div class="text-2xl font-bold text-pink-600">228</div>
+                </div>
             </div>
         </div>
-    </div>
-    
-    <div class="bg-white p-6 rounded-lg shadow border border-gray-200">
-        <div class="flex items-center">
-            <div class="p-3 rounded-full bg-purple-100 text-purple-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
+        
+        <!-- Grade Level Breakdown -->
+        <div class="mt-6">
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="border-t border-gray-200">
+                            <th class="text-left py-2 px-4 text-sm font-medium text-gray-600">Grade Level</th>
+                            <th class="text-center py-2 px-4 text-sm font-medium text-gray-600">G7</th>
+                            <th class="text-center py-2 px-4 text-sm font-medium text-gray-600">G8</th>
+                            <th class="text-center py-2 px-4 text-sm font-medium text-gray-600">G9</th>
+                            <th class="text-center py-2 px-4 text-sm font-medium text-gray-600">G10</th>
+                            <th class="text-center py-2 px-4 text-sm font-medium text-gray-600">G11</th>
+                            <th class="text-center py-2 px-4 text-sm font-medium text-gray-600">NG</th>
+                            <th class="text-center py-2 px-4 text-sm font-medium text-gray-600">T</th>
+                            <th class="text-center py-2 px-4 text-sm font-medium text-gray-600">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-t border-gray-200">
+                            <td class="py-2 px-4 text-sm font-medium text-gray-900">Total</td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">62</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">67</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">129</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">47</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">49</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">96</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">47</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">55</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">102</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">36</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">57</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">93</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">0</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">0</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">0</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">0</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">0</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">0</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">0</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">0</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">0</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold text-blue-600">192</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold text-pink-600">228</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold text-gray-900">420</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="ml-4">
-                <h2 class="text-sm font-medium text-gray-500">Grades Encoded</h2>
-                <p class="text-2xl font-bold text-gray-900">89%</p>
+            
+            <div class="mt-4 text-center">
+                <button class="text-blue-600 hover:text-blue-800 text-sm font-medium">Toggle Segments</button>
             </div>
         </div>
     </div>
@@ -99,94 +192,9 @@
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="bg-white rounded-lg shadow border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900">Quick Actions</h3>
-        </div>
-        <div class="p-6">
-            <div class="grid grid-cols-2 gap-4">
-                <a href="{{ url('/students/create') }}" class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg class="w-8 h-8 text-blue-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                    </svg>
-                    <span class="text-sm font-medium text-gray-900">Enroll Student</span>
-                </a>
-                
-                <a href="{{ url('/grades/encode') }}" class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                    <span class="text-sm font-medium text-gray-900">Encode Grades</span>
-                </a>
-                
-                <a href="{{ url('/sf9') }}" class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                    </svg>
-                    <span class="text-sm font-medium text-gray-900">Generate SF9</span>
-                </a>
-                
-                <a href="{{ url('/classes') }}" class="flex flex-col items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                    <svg class="w-8 h-8 text-orange-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                    </svg>
-                    <span class="text-sm font-medium text-gray-900">Manage Classes</span>
-                </a>
-            </div>
-        </div>
-    </div>
+
 </div>
 
 <!-- My Classes Overview -->
-<div class="mt-8 bg-white rounded-lg shadow border border-gray-200">
-    <div class="px-6 py-4 border-b border-gray-200">
-        <h3 class="text-lg font-medium text-gray-900">My Classes</h3>
-    </div>
-    <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Students</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">School Year</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">Grade 7 - Section A</div>
-                        <div class="text-sm text-gray-500">Mathematics</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">42</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <a href="{{ url('/classes/1') }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                        <a href="{{ url('/grades/encode/1') }}" class="text-green-600 hover:text-green-900">Encode Grades</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="text-sm font-medium text-gray-900">Grade 8 - Section B</div>
-                        <div class="text-sm text-gray-500">Science</div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">38</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">2024-2025</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <a href="{{ url('/classes/2') }}" class="text-blue-600 hover:text-blue-900 mr-3">View</a>
-                        <a href="{{ url('/grades/encode/2') }}" class="text-green-600 hover:text-green-900">Encode Grades</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+
 @endsection

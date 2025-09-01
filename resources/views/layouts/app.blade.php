@@ -13,15 +13,22 @@
         <header class="bg-white border-b border-gray-200 px-4 py-3 shadow-sm">
             <div class="flex items-center justify-between max-w-7xl mx-auto">
                 <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                    <div class="w-8 px-8 bg-blue-600 rounded flex items-center justify-center">
                         <span class="text-white font-bold text-sm">DepEd</span>
                     </div>
                     <span class="text-gray-800 font-semibold text-lg">Learner Information System</span>
-                    <span class="text-gray-500 text-sm">| Adviser Portal</span>
+                    <span class="text-gray-500 text-sm">| Administrative Portal</span>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-600">Welcome, Adviser</span>
-                    <a href="{{ url('/portal/login') }}" class="text-blue-600 hover:text-blue-800 text-sm">Logout</a>
+                    @auth
+                        <span class="text-sm text-gray-600">Welcome, {{ auth()->user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-blue-600 hover:text-blue-800 text-sm">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ url('/portal/login') }}" class="text-blue-600 hover:text-blue-800 text-sm">Login</a>
+                    @endauth
                 </div>
             </div>
         </header>
@@ -34,27 +41,69 @@
                         Dashboard
                     </a>
                     <a href="{{ url('/classes') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('classes*') ? 'border-white' : 'border-transparent' }}">
-                        My Classes
+                        List of Classes
                     </a>
-                    <a href="{{ url('/students') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('students*') ? 'border-white' : 'border-transparent' }}">
-                        Students
-                    </a>
-                    <a href="{{ url('/grades') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('grades*') ? 'border-white' : 'border-transparent' }}">
-                        Grade Encoding
-                    </a>
+                    @auth
+                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'adviser')
+                        <a href="{{ url('/grades') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('grades*') ? 'border-white' : 'border-transparent' }}">
+                            Grade Encoding
+                        </a>
+                        @endif
+                        
+                        @if(auth()->user()->role === 'teacher')
+                        <a href="{{ url('/teacher-portal') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('teacher-portal*') ? 'border-white' : 'border-transparent' }}">
+                            Subject Teacher Portal
+                        </a>
+                        @endif
+                    @endauth
                     
                     <!-- School Forms Dropdown -->
                     <div class="relative group">
-                        <button class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('sf*') ? 'border-white' : 'border-transparent' }} flex items-center">
+                        <button class="text-white hover:text-gray-200 px-3 py-4 rounded-md text-sm font-medium flex items-center">
                             School Forms
-                            <svg class="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </button>
-                        <div class="absolute left-0 mt-0 w-56 bg-white text-gray-800 shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <a href="{{ url('/sf9') }}" class="block px-4 py-3 text-sm hover:bg-gray-100 border-b border-gray-100">SF9 - Report Card</a>
-                            <a href="{{ url('/sf10') }}" class="block px-4 py-3 text-sm hover:bg-gray-100 border-b border-gray-100">SF10 - Learner's Permanent Academic Record</a>
-                            <a href="{{ url('/sf1') }}" class="block px-4 py-3 text-sm hover:bg-gray-100">SF1 - School Register</a>
+                        <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                            <div class="py-1">
+                                <a href="{{ url('/sf/sf1') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    SF1 - School Register
+                                </a>
+                                <a href="{{ url('/sf/sf2') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    SF2 - Enrollment & Attendance
+                                </a>
+                                <a href="{{ url('/sf/sf3') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    SF3 - Books/Textbooks Monitor
+                                </a>
+                                <a href="{{ url('/sf/sf5') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    SF5 - Promotions & Proficiency
+                                </a>
+                                <a href="{{ url('/sf/sf9') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    SF9 - Report Card
+                                </a>
+                                <a href="{{ url('/sf/sf10') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                    SF10 - Permanent Record
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
