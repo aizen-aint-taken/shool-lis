@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('parent_contact')->nullable();
             $table->foreignId('school_class_id')->nullable()->constrained('school_classes')->onDelete('set null');
             $table->string('student_type')->default('Regular'); // Regular, Transferee, Balik-Aral
+            $table->string('mother_tongue')->nullable();
+            $table->string('religion')->nullable(false);
+            $table->string('ethnic_group')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
         });

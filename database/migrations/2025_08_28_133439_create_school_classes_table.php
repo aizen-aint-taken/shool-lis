@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('grade_level');
             $table->string('section');
             $table->string('school_year');
-            $table->foreignId('adviser_id')->constrained('advisers')->onDelete('cascade');
+            $table->foreignId('adviser_id')->constrained('users')->onDelete('cascade');
             $table->integer('max_students')->default(40);
             $table->boolean('is_active')->default(true);
             $table->timestamps();

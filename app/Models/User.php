@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -46,5 +47,37 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Relationships
+    public function advisedClasses(): HasMany
+    {
+        return $this->hasMany(SchoolClass::class, 'adviser_id');
+    }
+
+    public function encodedGrades(): HasMany
+    {
+        return $this->hasMany(Grade::class, 'teacher_id');
+    }
+
+    // Helper methods
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isAdviser(): bool
+    {
+        return $this->role === 'adviser';
+    }
+
+    public function isTeacher(): bool
+    {
+        return $this->role === 'teacher';
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
     }
 }

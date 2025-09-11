@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('grade_level');
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            // Indexes for performance
+            $table->index(['is_active', 'grade_level']);
+            $table->index('name');
         });
     }
 
