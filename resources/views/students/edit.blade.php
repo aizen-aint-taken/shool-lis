@@ -33,9 +33,9 @@
 
 <div class="mb-6">
     <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-        <a href="{{ route('students.index') }}" class="hover:text-gray-700">Students</a>
+        <a href="{{ auth()->user()->role === "admin" ? route('admin.students.index') : route('students.index') }}" class="hover:text-gray-700">Students</a>
         <span>/</span>
-        <a href="{{ route('students.show', $student) }}" class="hover:text-gray-700">{{ $student->full_name }}</a>
+        <a href="{{ auth()->user()->role === "admin" ? route('admin.students.show', $student) : route('students.show', $student) }}" class="hover:text-gray-700">{{ $student->full_name }}</a>
         <span>/</span>
         <span class="text-gray-900">Edit</span>
     </div>
@@ -44,7 +44,7 @@
 </div>
 
 <div class="max-w-4xl">
-    <form action="{{ route('students.update', $student) }}" method="POST" class="bg-white rounded-lg shadow border border-gray-200 p-6">
+    <form action="{{ auth()->user()->role === "admin" ? route('admin.students.update', $student) : route('students.update', $student) }}" method="POST" class="bg-white rounded-lg shadow border border-gray-200 p-6">
         @csrf
         @method('PUT')
         
@@ -227,7 +227,7 @@
 
         <!-- Form Actions -->
         <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-            <a href="{{ route('students.show', $student) }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg text-sm font-medium">
+            <a href="{{ auth()->user()->role === "admin" ? route('admin.students.show', $student) : route('students.show', $student) }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg text-sm font-medium">
                 Cancel
             </a>
             <button type="submit" id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium">
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Redirect to dashboard page after a short delay
                 setTimeout(() => {
-                    window.location.href = '{{ url("/dashboard") }}';
+                    window.location.href = '{{ auth()->user()->role === "admin" ? route("admin.students.show", $student) : route("students.show", $student) }}';
                 }, 1500);
             } else {
                 // Show error message

@@ -22,16 +22,18 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-gray-900">Student Management</h1>
-            <p class="text-gray-600">Manage student enrollments and information - {{ auth()->user()->role === 'admin' ? 'Administrator' : 'Adviser' }}: {{ auth()->user()->name }}</p>
+            <p class="text-gray-600">Manage student enrollments and information - {{ auth()->user()->role === "admin" ? 'Administrator' : 'Adviser' }}: {{ auth()->user()->name }}</p>
         </div>
         <div class="flex items-center space-x-4">
-            <a href="{{ route('students.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+            <!-- Use admin-specific route for admins -->
+            <a href="{{ auth()->user()->role === "admin" ? route('admin.students.create') : route('students.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
                 <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
                 Enroll New Student
             </a>
-            <a href="{{ route('classes.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+            <!-- Use appropriate class management route -->
+            <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.index') : route('classes.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
                 <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                 </svg>
@@ -44,7 +46,7 @@
 <!-- Filter and Search -->
 <div class="bg-white rounded-lg shadow border border-gray-200 mb-6">
     <div class="p-4">
-        <form method="GET" action="{{ route('students.index') }}" id="filterForm">
+        <form method="GET" action="{{ auth()->user()->role === "admin" ? route('admin.students.index') : route('students.index') }}" id="filterForm">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Class</label>
@@ -82,7 +84,7 @@
                 </div>
                 <div class="flex items-end">
                     <button type="submit" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm mr-2">Filter</button>
-                    <a href="{{ route('students.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg text-sm">Clear</a>
+                    <a href="{{ auth()->user()->role === "admin" ? route('admin.students.index') : route('students.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg text-sm">Clear</a>
                 </div>
             </div>
         </form>
@@ -150,10 +152,10 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div class="flex space-x-2">
-                            <a href="{{ route('students.show', $student) }}" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded text-xs">
+                            <a href="{{ auth()->user()->role === "admin" ? route('students.show', $student) : route('students.show', $student) }}" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded text-xs">
                                 View
                             </a>
-                            <a href="{{ route('students.edit', $student) }}" class="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-2 py-1 rounded text-xs">
+                            <a href="{{ auth()->user()->role === "admin" ? route('admin.students.edit', $student) : route('students.edit', $student) }}" class="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-2 py-1 rounded text-xs">
                                 Edit
                             </a>
                             @if(auth()->user()->role === 'admin')
@@ -173,7 +175,7 @@
                             </svg>
                             <p class="text-lg font-medium text-gray-400">No students found</p>
                             <p class="text-sm text-gray-400 mb-4">Enroll your first student to get started</p>
-                            <a href="{{ route('students.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                            <a href="{{ auth()->user()->role === "admin" ? route('admin.students.create') : route('students.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
                                 Enroll New Student
                             </a>
                         </div>
@@ -201,23 +203,13 @@
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <script>
-// Student management JavaScript functionality
-document.addEventListener('DOMContentLoaded', function() {
-    // Auto-submit search form on Enter key
-    const searchInput = document.querySelector('input[name="search"]');
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                document.getElementById('filterForm').submit();
-            }
-        });
-    }
-});
-
-// Delete student function
+// Delete student functionality
 function deleteStudent(studentId, studentName) {
-    if (confirm(`Are you sure you want to remove "${studentName}" from the system? This will deactivate the student.`)) {
-        fetch(`/students/${studentId}`, {
+    // Use appropriate route based on user role
+    const deleteUrl = '{{ auth()->user()->role === 'admin' ? '/admin/students/' : '/students/' }}' + studentId;
+    
+    if (confirm(`Are you sure you want to remove ${studentName} from the system? This action cannot be undone.`)) {
+        fetch(deleteUrl, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -228,23 +220,22 @@ function deleteStudent(studentId, studentName) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                showMessage(data.message, 'success');
-                // Reload page after short delay
+                showMessage('✅ Student removed successfully!', 'success');
+                // Reload the page after successful deletion
                 setTimeout(() => {
-                    window.location.reload();
+                    location.reload();
                 }, 1500);
             } else {
-                showMessage(data.message, 'error');
+                showMessage('❌ Error: ' + (data.message || 'Failed to remove student'), 'error');
             }
         })
         .catch(error => {
             console.error('Error removing student:', error);
-            showMessage('Error removing student. Please try again.', 'error');
+            showMessage('❌ Error removing student: ' + error.message, 'error');
         });
     }
 }
 
-// Show message function
 function showMessage(message, type) {
     const alertClass = type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
     document.getElementById('messageContainer').innerHTML = `

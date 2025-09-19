@@ -60,6 +60,32 @@ class User extends Authenticatable
         return $this->hasMany(Grade::class, 'teacher_id');
     }
 
+    public function encodedAttendance(): HasMany
+    {
+        return $this->hasMany(Attendance::class, 'adviser_id');
+    }
+
+    public function student()
+    {
+        // Log this relationship access for debugging
+        \Log::info('Accessing student relationship', [
+            'user_id' => $this->id,
+            'username' => $this->username,
+            'lrn_column' => 'lrn',
+            'username_column' => 'username'
+        ]);
+        
+        $relationship = $this->hasOne(Student::class, 'lrn', 'username');
+        
+        // Log the SQL query that would be generated
+        \Log::info('Student relationship query', [
+            'sql' => $relationship->toSql(),
+            'bindings' => $relationship->getBindings()
+        ]);
+        
+        return $relationship;
+    }
+
     // Helper methods
     public function isAdmin(): bool
     {

@@ -16,7 +16,7 @@
 
 <div class="mb-6">
     <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-        <a href="{{ url('/classes') }}" class="hover:text-gray-700">Classes</a>
+        <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.index') : route('classes.index') }}" class="hover:text-gray-700">Classes</a>
         <span>/</span>
         <span class="text-gray-900">Add New Class</span>
     </div>
@@ -106,7 +106,7 @@
 
         <!-- Form Actions -->
         <div class="mt-8 flex justify-end space-x-3">
-            <a href="{{ route('classes.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg font-medium">
+            <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.index') : route('classes.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg font-medium">
                 Cancel
             </a>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium">
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Redirect to classes index after a short delay
                 setTimeout(() => {
-                    window.location.href = '{{ route("classes.index") }}';
+                    window.location.href = '{{ auth()->user()->role === "admin" ? route("admin.classes.index") : route("classes.index") }}';
                 }, 1500);
             } else {
                 // Show error message

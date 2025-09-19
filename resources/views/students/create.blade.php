@@ -20,7 +20,7 @@
 
 <div class="mb-6">
     <div class="flex items-center space-x-2 text-sm text-gray-500 mb-2">
-        <a href="{{ route('classes.index') }}" class="hover:text-gray-700">Classes</a>
+        <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.index') : route('classes.index') }}" class="hover:text-gray-700">Classes</a>
         <span>/</span>
         <span class="text-gray-900">Enroll Student</span>
     </div>
@@ -34,123 +34,167 @@
         
         <!-- Class Selection -->
         <div class="mb-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Class Assignment</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Class *</label>
-                    <select name="school_class_id" id="classSelect" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Choose a class...</option>
-                        @foreach($classes as $class)
-                        <option value="{{ $class->id }}" {{ $selectedClassId == $class->id ? 'selected' : '' }}>
-                            Grade {{ $class->grade_level }} - {{ $class->section }} ({{ $class->school_year }}) - 
-                            {{ $class->students->where('is_active', true)->count() }}/{{ $class->max_students }} students
-                        </option>
-                        @endforeach
-                    </select>
-                </div>
+            <label for="school_class_id" class="block text-sm font-medium text-gray-700 mb-2">Assign to Class *</label>
+            <select id="school_class_id" name="school_class_id" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <option value="">Select a class</option>
+                @foreach($classes as $class)
+                    <option value="{{ $class->id }}" {{ $selectedClassId == $class->id ? 'selected' : '' }}>
+                        {{ $class->class_name }} (Grade {{ $class->grade_level }} - {{ $class->section }}) - {{ $class->school_year }}
+                    </option>
+                @endforeach
+            </select>
+            <p class="mt-1 text-sm text-gray-500">Select the class to enroll this student in.</p>
+        </div>
+
+        <!-- LRN -->
+        <div class="mb-6">
+            <label for="lrn" class="block text-sm font-medium text-gray-700 mb-2">Learner Reference Number (LRN) *</label>
+            <input type="text" id="lrn" name="lrn" value="{{ old('lrn') }}" maxlength="12" 
+                   class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                   placeholder="Enter 12-digit LRN">
+            <p class="mt-1 text-sm text-gray-500">Unique 12-digit identifier assigned by DepEd.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <!-- First Name -->
+            <div>
+                <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
+                <input type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" 
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                       placeholder="Enter first name">
+            </div>
+
+            <!-- Middle Name -->
+            <div>
+                <label for="middle_name" class="block text-sm font-medium text-gray-700 mb-2">Middle Name</label>
+                <input type="text" id="middle_name" name="middle_name" value="{{ old('middle_name') }}" 
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                       placeholder="Enter middle name">
+            </div>
+
+            <!-- Last Name -->
+            <div>
+                <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
+                <input type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" 
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                       placeholder="Enter last name">
             </div>
         </div>
 
-        <!-- Personal Information -->
+        <!-- Suffix -->
         <div class="mb-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Personal Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">LRN (Learner Reference Number) *</label>
-                    <input type="text" name="lrn" id="lrn" required maxlength="12" placeholder="123456789012" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">First Name *</label>
-                    <input type="text" name="first_name" required maxlength="50" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Last Name *</label>
-                    <input type="text" name="last_name" required maxlength="50" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Middle Name</label>
-                    <input type="text" name="middle_name" maxlength="50" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Suffix</label>
-                    <input type="text" name="suffix" maxlength="10" placeholder="Jr., Sr., III" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Gender *</label>
-                    <select name="gender" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Select Gender</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Birth Date *</label>
-                    <input type="date" name="birth_date" required class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Mother Tongue</label>
-                    <input type="text" name="mother_tongue" maxlength="50" placeholder="Tagalog, Bisaya, etc." class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Religion</label>
-                    <input type="text" name="religion" maxlength="50" placeholder="Catholic, Protestant, etc." class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
+            <label for="suffix" class="block text-sm font-medium text-gray-700 mb-2">Suffix</label>
+            <select id="suffix" name="suffix" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <option value="">None</option>
+                <option value="Jr." {{ old('suffix') == 'Jr.' ? 'selected' : '' }}>Jr.</option>
+                <option value="Sr." {{ old('suffix') == 'Sr.' ? 'selected' : '' }}>Sr.</option>
+                <option value="III" {{ old('suffix') == 'III' ? 'selected' : '' }}>III</option>
+                <option value="IV" {{ old('suffix') == 'IV' ? 'selected' : '' }}>IV</option>
+            </select>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Birth Date -->
+            <div>
+                <label for="birth_date" class="block text-sm font-medium text-gray-700 mb-2">Birth Date *</label>
+                <input type="date" id="birth_date" name="birth_date" value="{{ old('birth_date') }}" 
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+            </div>
+
+            <!-- Gender -->
+            <div>
+                <label for="gender" class="block text-sm font-medium text-gray-700 mb-2">Gender *</label>
+                <select id="gender" name="gender" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <option value="">Select gender</option>
+                    <option value="Male" {{ old('gender') == 'Male' ? 'selected' : '' }}>Male</option>
+                    <option value="Female" {{ old('gender') == 'Female' ? 'selected' : '' }}>Female</option>
+                </select>
             </div>
         </div>
 
-        <!-- Contact Information -->
+        <!-- Address -->
         <div class="mb-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">Contact Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Complete Address *</label>
-                    <textarea name="address" required rows="3" maxlength="200" placeholder="Complete home address" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Student Contact Number</label>
-                    <input type="text" name="contact_number" maxlength="15" placeholder="09123456789" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
+            <label for="address" class="block text-sm font-medium text-gray-700 mb-2">Address *</label>
+            <textarea id="address" name="address" rows="2" 
+                      class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                      placeholder="Enter complete address">{{ old('address') }}</textarea>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Contact Number -->
+            <div>
+                <label for="contact_number" class="block text-sm font-medium text-gray-700 mb-2">Student Contact Number</label>
+                <input type="text" id="contact_number" name="contact_number" value="{{ old('contact_number') }}" 
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                       placeholder="Enter contact number">
+            </div>
+
+            <!-- Student Type -->
+            <div>
+                <label for="student_type" class="block text-sm font-medium text-gray-700 mb-2">Student Type</label>
+                <select id="student_type" name="student_type" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                    <option value="Regular" {{ old('student_type', 'Regular') == 'Regular' ? 'selected' : '' }}>Regular</option>
+                    <option value="Irregular" {{ old('student_type') == 'Irregular' ? 'selected' : '' }}>Irregular</option>
+                    <option value="Transferee" {{ old('student_type') == 'Transferee' ? 'selected' : '' }}>Transferee</option>
+                </select>
             </div>
         </div>
 
         <!-- Parent/Guardian Information -->
-        <div class="mb-6">
+        <div class="border-t border-gray-200 pt-6 mb-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Parent/Guardian Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Parent/Guardian Name *</label>
-                    <input type="text" name="parent_guardian" required maxlength="100" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Parent/Guardian Contact *</label>
-                    <input type="text" name="parent_contact" required maxlength="15" placeholder="09123456789" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                </div>
+            
+            <!-- Parent/Guardian Name -->
+            <div class="mb-6">
+                <label for="parent_guardian" class="block text-sm font-medium text-gray-700 mb-2">Parent/Guardian Name *</label>
+                <input type="text" id="parent_guardian" name="parent_guardian" value="{{ old('parent_guardian') }}" 
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                       placeholder="Enter parent or guardian name">
+            </div>
+
+            <!-- Parent Contact -->
+            <div class="mb-6">
+                <label for="parent_contact" class="block text-sm font-medium text-gray-700 mb-2">Parent/Guardian Contact *</label>
+                <input type="text" id="parent_contact" name="parent_contact" value="{{ old('parent_contact') }}" 
+                       class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                       placeholder="Enter parent or guardian contact number">
             </div>
         </div>
 
         <!-- Additional Information -->
-        <div class="mb-6">
+        <div class="border-t border-gray-200 pt-6 mb-6">
             <h3 class="text-lg font-medium text-gray-900 mb-4">Additional Information</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Mother Tongue -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Student Type</label>
-                    <select name="student_type" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="Regular">Regular</option>
-                        <option value="Transferee">Transferee</option>
-                        <option value="Returnee">Returnee</option>
-                        <option value="Balik-Aral">Balik-Aral</option>
-                    </select>
+                    <label for="mother_tongue" class="block text-sm font-medium text-gray-700 mb-2">Mother Tongue</label>
+                    <input type="text" id="mother_tongue" name="mother_tongue" value="{{ old('mother_tongue') }}" 
+                           class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                           placeholder="Enter mother tongue">
                 </div>
+
+                <!-- Religion -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Indigenous People/Ethnic Group</label>
-                    <input type="text" name="ethnic_group" maxlength="50" placeholder="Leave blank if not applicable" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <label for="religion" class="block text-sm font-medium text-gray-700 mb-2">Religion</label>
+                    <input type="text" id="religion" name="religion" value="{{ old('religion') }}" 
+                           class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                           placeholder="Enter religion">
+                </div>
+
+                <!-- Ethnic Group -->
+                <div>
+                    <label for="ethnic_group" class="block text-sm font-medium text-gray-700 mb-2">Ethnic Group</label>
+                    <input type="text" id="ethnic_group" name="ethnic_group" value="{{ old('ethnic_group') }}" 
+                           class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                           placeholder="Enter ethnic group">
                 </div>
             </div>
         </div>
 
         <!-- Form Actions -->
         <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-            <a href="{{ route('classes.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg text-sm font-medium">
+            <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.index') : route('classes.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-lg text-sm font-medium">
                 Cancel
             </a>
             <button type="submit" id="submitBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium">
@@ -210,7 +254,10 @@ document.addEventListener('DOMContentLoaded', function() {
         submitBtn.textContent = 'Enrolling...';
         submitBtn.classList.add('opacity-50');
 
-        fetch('/students', {
+        // Use the appropriate route based on user role
+        const storeRoute = '{{ auth()->user()->role === 'admin' ? route('admin.students.store') : route('students.store') }}';
+        
+        fetch(storeRoute, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -232,7 +279,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Reset form after successful enrollment
                 setTimeout(() => {
                     form.reset();
-                    window.location.href = data.redirect || '/classes';
+                    // Redirect to appropriate index page based on role
+                    window.location.href = '{{ auth()->user()->role === 'admin' ? route('admin.students.index') : route('students.index') }}';
                 }, 2000);
             } else {
                 showMessage('❌ Error: ' + (data.message || 'Failed to enroll student'), 'error');

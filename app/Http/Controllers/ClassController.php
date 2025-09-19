@@ -72,8 +72,16 @@ class ClassController extends Controller
         $gradeLevels = SchoolClass::distinct()->pluck('grade_level')->sort();
         $schoolYears = SchoolClass::distinct()->pluck('school_year')->sort()->reverse();
         $advisers = User::where('role', 'adviser')->get();
+        
+        // Calculate dynamic stats
+        $stats = [
+            'total_classes' => SchoolClass::count(),
+            'active_classes' => SchoolClass::where('is_active', true)->count(),
+            'total_students' => Student::where('is_active', true)->count(),
+            'total_advisers' => User::where('role', 'adviser')->count()
+        ];
 
-        return view('classes.index', compact('classes', 'gradeLevels', 'schoolYears', 'advisers'));
+        return view('classes.index', compact('classes', 'gradeLevels', 'schoolYears', 'advisers', 'stats'));
     }
 
     /**
@@ -210,6 +218,11 @@ class ClassController extends Controller
             abort(403, 'Only administrators and advisers can edit classes.');
         }
 
+        // Advisers can only edit classes they are assigned to
+        if (Auth::user()->role === 'adviser' && $class->adviser_id !== Auth::id()) {
+            abort(403, 'You can only edit classes you are assigned to as an adviser.');
+        }
+
         $advisers = User::where('role', 'adviser')->get();
 
         return view('classes.edit', compact('class', 'advisers'));
@@ -225,6 +238,14 @@ class ClassController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Only administrators and advisers can update classes.'
+            ], 403);
+        }
+
+        // Advisers can only update classes they are assigned to
+        if (Auth::user()->role === 'adviser' && $class->adviser_id !== Auth::id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You can only update classes you are assigned to as an adviser.'
             ], 403);
         }
 

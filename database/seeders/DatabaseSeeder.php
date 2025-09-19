@@ -45,7 +45,7 @@ class DatabaseSeeder extends Seeder
 
         User::create([
             'name' => 'Ana Rodriguez',
-            'username' => 'student1',
+            'username' => '304866202500001', // Using LRN as username
             'email' => 'ana.rodriguez@student.maharlika.edu.ph',
             'password' => Hash::make('password'),
             'role' => 'student',
@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
 
         User::create([
             'name' => 'Pedro Garcia',
-            'username' => 'student2',
+            'username' => '304866202500002', // Using LRN as username
             'email' => 'pedro.garcia@student.maharlika.edu.ph',
             'password' => Hash::make('password'),
             'role' => 'student',
@@ -134,5 +134,11 @@ class DatabaseSeeder extends Seeder
             'ethnic_group' => 'Filipino',
             'is_active' => true,
         ]);
+        
+        // Seed Books and Book Issues
+        $this->call(BookSeeder::class);
+        
+        // Seed Grades
+        $this->call(GradeSeeder::class);
     }
 }

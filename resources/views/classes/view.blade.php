@@ -153,7 +153,7 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div class="flex space-x-2">
-                            <a href="{{ url('/students/304866202500001') }}" class="text-blue-600 hover:text-blue-900">View</a>
+                            <a href="{{auth }}" class="text-blue-600 hover:text-blue-900">View</a>
                             @auth
                                 @if(auth()->user()->role === 'admin' || auth()->user()->role === 'adviser')
                                 <a href="{{ url('/students/304866202500001/edit') }}" class="text-green-600 hover:text-green-900">Edit</a>

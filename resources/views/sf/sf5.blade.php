@@ -18,6 +18,32 @@
     </div>
 </div>
 
+<!-- Class Selection Form -->
+<div class="bg-white rounded-lg shadow border border-gray-200 mb-6">
+    <div class="p-6">
+        <form method="GET" action="{{ route('sf.sf5') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label for="class_id" class="block text-sm font-medium text-gray-700 mb-2">Select Class</label>
+                <select name="class_id" id="class_id" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select Class --</option>
+                    @foreach($classes as $class)
+                        <option value="{{ $class->id }}" {{ $selectedClass && $selectedClass->id == $class->id ? 'selected' : '' }}>
+                            {{ $class->class_name }} - {{ $class->adviser->name ?? 'No Adviser' }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="flex items-end">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                    Generate Report
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if($selectedClass)
 <!-- School Information Header -->
 <div class="bg-white rounded-lg shadow border border-gray-200 mb-6">
     <div class="p-6">
@@ -30,27 +56,37 @@
             <div class="space-y-2">
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">School:</span>
-                    <span class="text-gray-900">Maharlika National High School</span>
+                    <span class="text-gray-900">{{ $schoolInfo['school_name'] }}</span>
                 </div>
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">School ID:</span>
-                    <span class="text-gray-900">304866</span>
+                    <span class="text-gray-900">{{ $schoolInfo['school_id'] }}</span>
+                </div>
+                <div class="flex">
+                    <span class="font-medium text-gray-700 w-32">Division:</span>
+                    <span class="text-gray-900">{{ $schoolInfo['division'] }}</span>
+                </div>
+                <div class="flex">
+                    <span class="font-medium text-gray-700 w-32">Region:</span>
+                    <span class="text-gray-900">{{ $schoolInfo['region'] }}</span>
                 </div>
             </div>
             <div class="space-y-2">
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">School Year:</span>
-                    <span class="text-gray-900">2025-2026</span>
+                    <span class="text-gray-900">{{ $selectedClass->school_year }}</span>
                 </div>
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">Grade Level:</span>
-                    <select class="border border-gray-300 rounded px-2 py-1 text-sm">
-                        <option value="all">All Grade Levels</option>
-                        <option value="7">Grade 7</option>
-                        <option value="8">Grade 8</option>
-                        <option value="9">Grade 9</option>
-                        <option value="10">Grade 10</option>
-                    </select>
+                    <span class="text-gray-900">Grade {{ $selectedClass->grade_level }}</span>
+                </div>
+                <div class="flex">
+                    <span class="font-medium text-gray-700 w-32">Section:</span>
+                    <span class="text-gray-900">{{ $selectedClass->section }}</span>
+                </div>
+                <div class="flex">
+                    <span class="font-medium text-gray-700 w-32">Adviser:</span>
+                    <span class="text-gray-900">{{ $selectedClass->adviser->name ?? 'Not Assigned' }}</span>
                 </div>
             </div>
         </div>
@@ -71,44 +107,34 @@
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Enrolled</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Promoted</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Retained</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Dropped</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Advanced</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Proficient</th>
-                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Developing</th>
                     <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Beginning</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Grade 7</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">80</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600 font-medium">75</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-600 font-medium">3</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-blue-600 font-medium">12</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600 font-medium">45</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-600 font-medium">18</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-orange-600 font-medium">5</td>
-                </tr>
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Grade 8</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">78</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600 font-medium">72</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-600 font-medium">4</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-blue-600 font-medium">15</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600 font-medium">42</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-600 font-medium">15</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-orange-600 font-medium">6</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Grade {{ $selectedClass->grade_level }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-900">{{ $performanceStats['grade_stats']['total_enrolled'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600 font-medium">{{ $performanceStats['grade_stats']['promoted'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-600 font-medium">{{ $performanceStats['grade_stats']['retained'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-blue-600 font-medium">{{ $performanceStats['grade_stats']['dropped'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-green-600 font-medium">{{ $performanceStats['grade_stats']['advanced'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-yellow-600 font-medium">{{ $performanceStats['grade_stats']['proficient'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-orange-600 font-medium">{{ $performanceStats['grade_stats']['beginning'] ?? 0 }}</td>
                 </tr>
             </tbody>
             <tfoot class="bg-blue-50">
                 <tr>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">TOTAL</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-gray-900">325</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-green-600">305</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-yellow-600">12</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-blue-600">65</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-green-600">185</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-yellow-600">60</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-orange-600">15</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-gray-900">{{ $performanceStats['grade_stats']['total_enrolled'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-green-600">{{ $performanceStats['grade_stats']['promoted'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-yellow-600">{{ $performanceStats['grade_stats']['retained'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-blue-600">{{ $performanceStats['grade_stats']['dropped'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-green-600">{{ $performanceStats['grade_stats']['advanced'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-yellow-600">{{ $performanceStats['grade_stats']['proficient'] ?? 0 }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-orange-600">{{ $performanceStats['grade_stats']['beginning'] ?? 0 }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -121,7 +147,7 @@
                 <div class="flex items-center">
                     <div class="ml-4">
                         <p class="text-sm font-medium text-green-600">Promotion Rate</p>
-                        <p class="text-2xl font-semibold text-green-900">93.8%</p>
+                        <p class="text-2xl font-semibold text-green-900">{{ $performanceStats['promotion_rate'] ?? 0 }}%</p>
                     </div>
                 </div>
             </div>
@@ -130,7 +156,7 @@
                 <div class="flex items-center">
                     <div class="ml-4">
                         <p class="text-sm font-medium text-blue-600">Advanced Learners</p>
-                        <p class="text-2xl font-semibold text-blue-900">20%</p>
+                        <p class="text-2xl font-semibold text-blue-900">{{ $performanceStats['advanced_learners'] ?? 0 }}%</p>
                     </div>
                 </div>
             </div>
@@ -139,7 +165,7 @@
                 <div class="flex items-center">
                     <div class="ml-4">
                         <p class="text-sm font-medium text-yellow-600">Retention Rate</p>
-                        <p class="text-2xl font-semibold text-yellow-900">3.7%</p>
+                        <p class="text-2xl font-semibold text-yellow-900">{{ $performanceStats['retention_rate'] ?? 0 }}%</p>
                     </div>
                 </div>
             </div>
@@ -148,11 +174,12 @@
                 <div class="flex items-center">
                     <div class="ml-4">
                         <p class="text-sm font-medium text-orange-600">Beginning Level</p>
-                        <p class="text-2xl font-semibold text-orange-900">4.6%</p>
+                        <p class="text-2xl font-semibold text-orange-900">{{ $performanceStats['beginning_level'] ?? 0 }}%</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+@endif
 @endsection

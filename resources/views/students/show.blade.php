@@ -1,4 +1,7 @@
-@extends('layouts.app')
+
+541ues46.png
+odcmw0dj.png
+if i click view or edit it is access denied why? please solve this@extends('layouts.app')
 
 @section('title', 'Student Details')
 
@@ -30,13 +33,13 @@
                 <p class="text-gray-600">Complete information for {{ $student->full_name }}</p>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="{{ route('students.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                <a href="{{ auth()->user()->role === "admin" ? route('admin.students.index') : route('students.index') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                     Back to Students
                 </a>
-                <a href="{{ route('students.edit', $student) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                <a href="{{ auth()->user()->role === "admin" ? route('admin.students.edit', $student) : route('students.edit', $student) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
                     <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
@@ -157,7 +160,7 @@
                     <div>
                         <dt class="text-sm font-medium text-gray-500">Class</dt>
                         <dd class="mt-1 text-sm text-gray-900">
-                            <a href="{{ route('classes.show', $student->schoolClass) }}" class="text-blue-600 hover:text-blue-900 font-medium">
+                            <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.show', $student->schoolClass) : route('classes.show', $student->schoolClass) }}" class="text-blue-600 hover:text-blue-900 font-medium">
                                 {{ $student->schoolClass->class_name }}
                             </a>
                         </dd>

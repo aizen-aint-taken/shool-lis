@@ -19,15 +19,16 @@ class AuthController extends Controller
         $username = $request->input('username');
         $password = $request->input('password');
 
-        // Find user by username
+
         $user = User::where('username', $username)->first();
 
         if ($user && Hash::check($password, $user->password)) {
             Auth::login($user);
-            
+
             // Redirect based on role
             switch ($user->role) {
                 case 'admin':
+                    return redirect('/admin/dashboard');
                 case 'adviser':
                     return redirect('/dashboard');
                 case 'teacher':

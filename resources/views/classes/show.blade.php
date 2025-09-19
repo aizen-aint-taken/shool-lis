@@ -5,7 +5,7 @@
     <div class="flex items-center justify-between">
         <div>
             <div class="flex items-center space-x-2 text-sm text-gray-600 mb-2">
-                <a href="{{ route('classes.index') }}" class="hover:text-blue-600">List of Classes</a>
+                <a href="{{ auth()->user()->role === 'admin' ? route('admin.classes.index') : route('classes.index') }}" class="hover:text-blue-600">List of Classes</a>
                 <span>/</span>
                 <span class="text-gray-900">{{ $class->class_name }}</span>
             </div>
@@ -13,19 +13,21 @@
             <p class="text-gray-600">Grade {{ $class->grade_level }} - {{ $class->section }} • SY {{ $class->school_year }}</p>
         </div>
         <div class="flex items-center space-x-4">
-            @auth
-                @if(auth()->user()->role === 'admin' || auth()->user()->role === 'adviser')
-                <a href="{{ route('students.create') }}?class_id={{ $class->id }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    Enroll Student
-                </a>
-                <a href="{{ route('classes.edit', $class) }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">
-                    Edit Class
-                </a>
-                @endif
-            @endauth
+@auth
+    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'adviser')
+    <div>
+    <a href="{{ auth()->user()->role === "admin" ? route('admin.students.create') : route('students.create') }}?class_id={{ $class->id }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+        <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Enroll Student
+    </a>
+    <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.edit', $class) : route('classes.edit', $class) }}" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium">
+        Edit Class
+    </a>
+    </div>
+    @endif
+@endauth
         </div>
     </div>
 </div>
@@ -66,8 +68,8 @@
                     <p class="text-sm text-gray-600">ID: {{ $class->adviser->id }}</p>
                 @else
                     <p class="text-lg font-medium text-gray-500">No Adviser Assigned</p>
-                    @if(auth()->user()->role === 'admin')
-                        <a href="{{ route('classes.edit', $class) }}" class="text-sm text-blue-600 hover:text-blue-800">Assign Adviser</a>
+                    @if(auth()->user()->role === "admin")
+                        <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.edit', $class) : route('classes.edit', $class) }}" class="text-sm text-blue-600 hover:text-blue-800">Assign Adviser</a>
                     @endif
                 @endif
             </div>
@@ -180,10 +182,10 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
-                                <a href="{{ route('students.show', $student) }}" class="text-blue-600 hover:text-blue-900">View</a>
+                                <a href="{{ auth()->user()->role === 'admin' ? route('admin.students.show', $student) : route('students.show', $student) }}" class="text-blue-600 hover:text-blue-900">View</a>
                                 @auth
                                     @if(auth()->user()->role === 'admin' || auth()->user()->role === 'adviser')
-                                    <a href="{{ route('students.edit', $student) }}" class="text-green-600 hover:text-green-900">Edit</a>
+                                    <a href="{{ auth()->user()->role === 'admin' ? route('admin.students.edit', $student) : route('students.edit', $student) }}" class="text-green-600 hover:text-green-900">Edit</a>
                                     @endif
                                 @endauth
                             </div>
@@ -200,7 +202,7 @@
                                 <h3 class="mt-2 text-sm font-medium text-gray-900">No students enrolled</h3>
                                 <p class="mt-1 text-sm text-gray-500">Get started by enrolling students to this class.</p>
                                 <div class="mt-6">
-                                    <a href="{{ route('students.create') }}?class_id={{ $class->id }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                    <a href="{{ auth()->user()->role === "admin" ? route('admin.students.create') : route('students.create') }}?class_id={{ $class->id }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                                         <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                         </svg>
@@ -269,7 +271,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Show/hide content based on tab
                 if (tabId === 'grades-tab') {
-                    window.location.href = '{{ route("grades.view.only.class", $class) }}';
+                    window.location.href = '{{ auth()->user()->role === "admin" ? route("admin.grades.view.only.class", $class) : route("adviser.grades.view.only.class", $class) }}';
                 } else if (tabId === 'reports-tab') {
                     window.location.href = '{{ route("sf.sf5") }}?class_id={{ $class->id }}';
                 }

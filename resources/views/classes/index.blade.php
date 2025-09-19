@@ -25,13 +25,18 @@
             <p class="text-gray-600">Manage class sections and student enrollments - {{ auth()->user()->role === 'admin' ? 'Administrator' : 'Adviser' }}: {{ auth()->user()->name }}</p>
         </div>
         <div class="flex items-center space-x-4">
+            {{-- Admin can  create classes only admin --}}
+            @if (auth()->user()->role === 'admin') 
             <a href="{{ route('classes.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
                 <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
                 Create New Class
             </a>
-            <a href="{{ route('students.create') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
+            @endif
+
+            
+            <a href="{{ auth()->user()->role === "admin" ? route('admin.students.create') : route('students.create') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
                 <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                 </svg>
@@ -175,20 +180,20 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex space-x-2">
-                                <a href="{{ route('classes.show', $class) }}" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded text-xs">
+                                <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.show', $class) : route('classes.show', $class) }}" class="text-blue-600 hover:text-blue-900 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded text-xs">
                                     View
                                 </a>
                                 @auth
-                                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'adviser')
-                                    <a href="{{ route('classes.edit', $class) }}" class="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-2 py-1 rounded text-xs">
+                                    @if(auth()->user()->role === "admin" || (auth()->user()->role === "adviser" && $class->adviser_id === auth()->id()))
+                                    <a href="{{ auth()->user()->role === "admin" ? route('admin.classes.edit', $class) : route('classes.edit', $class) }}" class="text-green-600 hover:text-green-900 bg-green-50 hover:bg-green-100 px-2 py-1 rounded text-xs">
                                         Edit
                                     </a>
                                     @endif
                                 @endauth
 
                                 @auth
-                                    @if(auth()->user()->role === 'admin')
-                                    <form action="{{ route('classes.destroy', $class) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this class?')">
+                                    @if(auth()->user()->role === "admin")
+                                    <form action="{{ route('admin.classes.destroy', $class) }}" method="POST" class="inline" onsubmit="return confirm('Are you sure you want to delete this class?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-2 py-1 rounded text-xs">
@@ -244,13 +249,17 @@
     <div class="bg-gray-50 px-6 py-3 border-t border-gray-200">
         <div class="flex items-center justify-between">
             <div class="text-sm text-gray-700">
-                Showing 1 to 12 of 12 results
+                @if($classes->total() > 0)
+                    Showing {{ $classes->firstItem() }} to {{ $classes->lastItem() }} of {{ $classes->total() }} results
+                @else
+                    No results found
+                @endif
             </div>
+            @if($classes->hasPages())
             <div class="flex space-x-2">
-                <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500" disabled>Previous</button>
-                <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">1</button>
-                <button class="px-3 py-1 border border-gray-300 rounded text-sm text-gray-500" disabled>Next</button>
+                {{ $classes->withQueryString()->links('pagination::bootstrap-4') }}
             </div>
+            @endif
         </div>
     </div>
 </div>
@@ -266,7 +275,7 @@
             </div>
             <div class="ml-4">
                 <h2 class="text-sm font-medium text-gray-500">Total Classes</h2>
-                <p class="text-2xl font-bold text-gray-900">12</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_classes'] }}</p>
             </div>
         </div>
     </div>
@@ -280,7 +289,7 @@
             </div>
             <div class="ml-4">
                 <h2 class="text-sm font-medium text-gray-500">Total Students</h2>
-                <p class="text-2xl font-bold text-gray-900">420</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_students'] }}</p>
             </div>
         </div>
     </div>
@@ -294,7 +303,7 @@
             </div>
             <div class="ml-4">
                 <h2 class="text-sm font-medium text-gray-500">Active Classes</h2>
-                <p class="text-2xl font-bold text-gray-900">12</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['active_classes'] }}</p>
             </div>
         </div>
     </div>
@@ -308,7 +317,7 @@
             </div>
             <div class="ml-4">
                 <h2 class="text-sm font-medium text-gray-500">Advisers</h2>
-                <p class="text-2xl font-bold text-gray-900">12</p>
+                <p class="text-2xl font-bold text-gray-900">{{ $stats['total_advisers'] }}</p>
             </div>
         </div>
     </div>

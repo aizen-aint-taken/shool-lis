@@ -49,15 +49,15 @@
     <div class="p-6">
         <div class="text-center mb-6">
             <div class="text-sm text-gray-600 mb-2">Total Enrollment</div>
-            <div class="text-6xl font-bold text-gray-900 mb-4">420</div>
+            <div class="text-6xl font-bold text-gray-900 mb-4">{{ $enrollmentStats['total'] }}</div>
             <div class="flex justify-center space-x-8">
                 <div class="text-center">
                     <div class="text-sm text-gray-600">Male</div>
-                    <div class="text-2xl font-bold text-blue-600">192</div>
+                    <div class="text-2xl font-bold text-blue-600">{{ $enrollmentStats['male'] }}</div>
                 </div>
                 <div class="text-center">
                     <div class="text-sm text-gray-600">Female</div>
-                    <div class="text-2xl font-bold text-pink-600">228</div>
+                    <div class="text-2xl font-bold text-pink-600">{{ $enrollmentStats['female'] }}</div>
                 </div>
             </div>
         </div>
@@ -84,35 +84,51 @@
                             <td class="py-2 px-4 text-sm font-medium text-gray-900">Total</td>
                             <td class="text-center py-2 px-4">
                                 <div class="text-xs text-blue-600 font-medium">M</div>
-                                <div class="text-sm font-bold">62</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G7']['male'] }}</div>
                                 <div class="text-xs text-pink-600 font-medium">F</div>
-                                <div class="text-sm font-bold">67</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G7']['female'] }}</div>
                                 <div class="text-xs text-gray-600 font-medium">T</div>
-                                <div class="text-sm font-bold">129</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G7']['total'] }}</div>
                             </td>
                             <td class="text-center py-2 px-4">
                                 <div class="text-xs text-blue-600 font-medium">M</div>
-                                <div class="text-sm font-bold">47</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G8']['male'] }}</div>
                                 <div class="text-xs text-pink-600 font-medium">F</div>
-                                <div class="text-sm font-bold">49</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G8']['female'] }}</div>
                                 <div class="text-xs text-gray-600 font-medium">T</div>
-                                <div class="text-sm font-bold">96</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G8']['total'] }}</div>
                             </td>
                             <td class="text-center py-2 px-4">
                                 <div class="text-xs text-blue-600 font-medium">M</div>
-                                <div class="text-sm font-bold">47</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G9']['male'] }}</div>
                                 <div class="text-xs text-pink-600 font-medium">F</div>
-                                <div class="text-sm font-bold">55</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G9']['female'] }}</div>
                                 <div class="text-xs text-gray-600 font-medium">T</div>
-                                <div class="text-sm font-bold">102</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G9']['total'] }}</div>
                             </td>
                             <td class="text-center py-2 px-4">
                                 <div class="text-xs text-blue-600 font-medium">M</div>
-                                <div class="text-sm font-bold">36</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G10']['male'] }}</div>
                                 <div class="text-xs text-pink-600 font-medium">F</div>
-                                <div class="text-sm font-bold">57</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G10']['female'] }}</div>
                                 <div class="text-xs text-gray-600 font-medium">T</div>
-                                <div class="text-sm font-bold">93</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G10']['total'] }}</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G11']['male'] }}</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G11']['female'] }}</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G11']['total'] }}</div>
+                            </td>
+                            <td class="text-center py-2 px-4">
+                                <div class="text-xs text-blue-600 font-medium">M</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G12']['male'] ?? 0 }}</div>
+                                <div class="text-xs text-pink-600 font-medium">F</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G12']['female'] ?? 0 }}</div>
+                                <div class="text-xs text-gray-600 font-medium">T</div>
+                                <div class="text-sm font-bold">{{ $gradeLevelStats['G12']['total'] ?? 0 }}</div>
                             </td>
                             <td class="text-center py-2 px-4">
                                 <div class="text-xs text-blue-600 font-medium">M</div>
@@ -124,27 +140,11 @@
                             </td>
                             <td class="text-center py-2 px-4">
                                 <div class="text-xs text-blue-600 font-medium">M</div>
-                                <div class="text-sm font-bold">0</div>
+                                <div class="text-sm font-bold text-blue-600">{{ $enrollmentStats['male'] }}</div>
                                 <div class="text-xs text-pink-600 font-medium">F</div>
-                                <div class="text-sm font-bold">0</div>
+                                <div class="text-sm font-bold text-pink-600">{{ $enrollmentStats['female'] }}</div>
                                 <div class="text-xs text-gray-600 font-medium">T</div>
-                                <div class="text-sm font-bold">0</div>
-                            </td>
-                            <td class="text-center py-2 px-4">
-                                <div class="text-xs text-blue-600 font-medium">M</div>
-                                <div class="text-sm font-bold">0</div>
-                                <div class="text-xs text-pink-600 font-medium">F</div>
-                                <div class="text-sm font-bold">0</div>
-                                <div class="text-xs text-gray-600 font-medium">T</div>
-                                <div class="text-sm font-bold">0</div>
-                            </td>
-                            <td class="text-center py-2 px-4">
-                                <div class="text-xs text-blue-600 font-medium">M</div>
-                                <div class="text-sm font-bold text-blue-600">192</div>
-                                <div class="text-xs text-pink-600 font-medium">F</div>
-                                <div class="text-sm font-bold text-pink-600">228</div>
-                                <div class="text-xs text-gray-600 font-medium">T</div>
-                                <div class="text-sm font-bold text-gray-900">420</div>
+                                <div class="text-sm font-bold text-gray-900">{{ $enrollmentStats['total'] }}</div>
                             </td>
                         </tr>
                     </tbody>
@@ -167,27 +167,19 @@
         </div>
         <div class="p-6">
             <div class="space-y-4">
+                @forelse($recentActivities as $activity)
                 <div class="flex items-center space-x-3">
-                    <div class="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <div class="w-2 h-2 bg-{{ $activity['color'] }}-400 rounded-full"></div>
                     <div class="flex-1">
-                        <p class="text-sm text-gray-900">Grade 7-A Mathematics grades updated</p>
-                        <p class="text-xs text-gray-500">2 hours ago</p>
+                        <p class="text-sm text-gray-900">{{ $activity['message'] }}</p>
+                        <p class="text-xs text-gray-500">{{ $activity['time'] }}</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <div class="flex-1">
-                        <p class="text-sm text-gray-900">New student enrolled: Juan Dela Cruz</p>
-                        <p class="text-xs text-gray-500">1 day ago</p>
-                    </div>
+                @empty
+                <div class="text-center text-gray-500 py-4">
+                    <p class="text-sm">No recent activities found.</p>
                 </div>
-                <div class="flex items-center space-x-3">
-                    <div class="w-2 h-2 bg-yellow-400 rounded-full"></div>
-                    <div class="flex-1">
-                        <p class="text-sm text-gray-900">SF9 forms generated for Q1</p>
-                        <p class="text-xs text-gray-500">3 days ago</p>
-                    </div>
-                </div>
+                @endforelse
             </div>
         </div>
     </div>

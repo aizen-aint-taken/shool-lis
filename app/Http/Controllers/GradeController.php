@@ -28,7 +28,41 @@ use Illuminate\Support\Facades\Log;
 
 class GradeController extends Controller
 {
-  
+    /**
+     * Display student portal grades for the authenticated student
+     */
+    public function studentPortalGrades(Request $request)
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+        
+        // For students, get the associated student record through the relationship
+        $student = $user->student;
+        
+        if (!$student) {
+            // Fallback: try to find student by LRN in username field
+            $student = Student::where('lrn', $user->username)->first();
+        }
+        
+        if (!$student) {
+            return redirect()->back()->withErrors(['error' => 'Student record not found.']);
+        }
+
+        // Get grades for the current academic year
+        $academicYear = '2025-2026'; // Updated to match the system default
+        $quarter = $request->get('quarter', '1st Quarter'); // Default to 1st Quarter
+
+        // Get grades for the student for the current academic year and quarter
+        $grades = Grade::with(['subject'])
+            ->where('student_id', $student->id)
+            ->where('academic_year', $academicYear)
+            ->where('grading_period', $quarter)
+            ->orderBy('subject_id')
+            ->get();
+
+        return view('portal.grades', compact('student', 'grades', 'academicYear', 'quarter'));
+    }
+
     public function encode(Request $request, $classId = null)
     {
         // Only teachers can encode grades - administrators can only view

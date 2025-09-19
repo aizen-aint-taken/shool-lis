@@ -33,72 +33,46 @@
             </div>
         </header>
 
-        <!-- Navigation Bar -->
-        <nav class="bg-blue-700 text-white shadow">
-            <div class="max-w-7xl mx-auto px-4">
-                <div class="flex space-x-8">
-                    <a href="{{ url('/dashboard') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('dashboard') ? 'border-white' : 'border-transparent' }}">
-                        Dashboard
+        <!-- Navigation Bar - Role-Based Access Control -->
+      <!-- resources/views/layouts/app.blade.php -->
+<nav class="bg-blue-700 text-white shadow">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex space-x-8">
+            @auth
+                @if(auth()->user()->role === 'admin')
+                    <!-- ADMIN NAVIGATION -->
+                    <a href="{{ url('/admin/dashboard') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('admin/dashboard*') ? 'border-white' : 'border-transparent' }}">
+                        Admin Dashboard
                     </a>
-                    <a href="{{ url('/classes') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('classes*') ? 'border-white' : 'border-transparent' }}">
-                        Class Management
+                    <a href="{{ url('/admin/users') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('admin/users*') ? 'border-white' : 'border-transparent' }}">
+                        User Management
                     </a>
-                    @auth
-                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'adviser')
-                        <!-- Student Management Dropdown -->
-                        <div class="relative group">
-                            <button class="text-white hover:text-gray-200 px-3 py-4 rounded-md text-sm font-medium flex items-center border-b-2 {{ request()->is('students*') ? 'border-white' : 'border-transparent' }}">
-                                Student Management
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                                <div class="py-1">
-                                    <a href="{{ route('students.create') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                        <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
-                                        Enroll New Student
-                                    </a>
-                                    <a href="{{ route('students.index') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                                        </svg>
-                                        Manage Students
-                                    </a>
-                                </div>
+                    <!-- Admin Class Management Dropdown -->
+                    <div class="relative group">
+                        <button class="text-white hover:text-gray-200 px-3 py-4 rounded-md text-sm font-medium flex items-center border-b-2 {{ request()->is('admin/classes*') || request()->is('classes*') ? 'border-white' : 'border-transparent' }}">
+                            Class Management
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                            <div class="py-1">
+                                <a href="{{ url('/admin/classes') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                    </svg>
+                                    View All Classes
+                                </a>
+                                <a href="{{ url('/admin/classes/create') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Create New Class
+                                </a>
                             </div>
                         </div>
-                        <!-- Grades Dropdown -->
-                        <div class="relative group">
-                            <button class="text-white hover:text-gray-200 px-3 py-4 rounded-md text-sm font-medium flex items-center border-b-2 {{ request()->is('grades*') ? 'border-white' : 'border-transparent' }}">
-                                Grades
-                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </button>
-                            <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                                <div class="py-1">
-                                    <a href="{{ url('/grades/view-only') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                        <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                        </svg>
-                                        View Student Grades
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                        
-                        @if(auth()->user()->role === 'teacher')
-                        <a href="{{ url('/teacher-portal') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('teacher-portal*') ? 'border-white' : 'border-transparent' }}">
-                            Subject Teacher Portal
-                        </a>
-                        @endif
-                    @endauth
-                    
-                    <!-- School Forms Dropdown -->
+                    </div>
+                    <!-- Admin School Forms Dropdown -->
                     <div class="relative group">
                         <button class="text-white hover:text-gray-200 px-3 py-4 rounded-md text-sm font-medium flex items-center">
                             School Forms
@@ -109,47 +83,117 @@
                         <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                             <div class="py-1">
                                 <a href="{{ url('/sf/sf1') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
                                     SF1 - School Register
                                 </a>
                                 <a href="{{ url('/sf/sf2') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                    SF2 - Enrollment & Attendance
+                                    SF2 - Daily Attendance
                                 </a>
                                 <a href="{{ url('/sf/sf3') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                    SF3 - Books/Textbooks Monitor
+                                    SF3 - Books Monitoring
                                 </a>
                                 <a href="{{ url('/sf/sf5') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                    SF5 - Promotions & Proficiency
+                                    SF5 - Promotion Report
                                 </a>
                                 <a href="{{ url('/sf/sf9') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                    SF9 - Report Card
+                                    SF9 - Report Cards
                                 </a>
                                 <a href="{{ url('/sf/sf10') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
-                                    <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                    SF10 - Permanent Record
+                                    SF10 - Permanent Records
+                                </a>
+                                <!-- Add SF8 here -->
+                                <a href="{{ url('/sf/sf8') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    SF8 - Health & Nutrition
                                 </a>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </nav>
+                    <a href="{{ url('/grades/view-only') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('grades/view-only*') ? 'border-white' : 'border-transparent' }}">
+                        View Grades
+                    </a>
+                    
+                @elseif(auth()->user()->role === 'adviser')
+                    <!-- ADVISER NAVIGATION -->
+                    <a href="{{ url('/dashboard') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('dashboard*') ? 'border-white' : 'border-transparent' }}">
+                        Dashboard
+                    </a>
+                    <a href="{{ url('/classes') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('classes*') ? 'border-white' : 'border-transparent' }}">
+                        My Classes
+                    </a>
+                    <a href="{{ url('/students') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('students*') ? 'border-white' : 'border-transparent' }}">
+                        Students
+                    </a>
+                    <a href="{{ url('/attendance') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('attendance*') ? 'border-white' : 'border-transparent' }}">
+                        Attendance
+                    </a>
+                    <!-- Adviser School Forms Dropdown -->
+                    <div class="relative group">
+                        <button class="text-white hover:text-gray-200 px-3 py-4 rounded-md text-sm font-medium flex items-center">
+                            School Forms
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                            <div class="py-1">
+                                <a href="{{ url('/sf/sf1') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    SF1 - School Register
+                                </a>
+                                <a href="{{ url('/sf/sf2') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    SF2 - Daily Attendance
+                                </a>
+                                <a href="{{ url('/sf/sf3') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    SF3 - Books Monitoring
+                                </a>
+                                <a href="{{ url('/sf/sf5') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    SF5 - Promotion Report
+                                </a>
+                                <a href="{{ url('/sf/sf9') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    SF9 - Report Cards
+                                </a>
+                                <a href="{{ url('/sf/sf10') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    SF10 - Permanent Records
+                                </a>
+                                <!-- Add SF8 here -->
+                                <a href="{{ url('/sf/sf8') }}" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+                                    SF8 - Health & Nutrition
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ url('/grades/view-only') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('grades/view-only*') ? 'border-white' : 'border-transparent' }}">
+                        View Grades
+                    </a>
+                    
+                @elseif(auth()->user()->role === 'teacher')
+                    <!-- TEACHER NAVIGATION -->
+                    <a href="{{ url('/teacher-portal') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('teacher-portal*') ? 'border-white' : 'border-transparent' }}">
+                        Dashboard
+                    </a>
+                    <a href="{{ url('/teacher-portal/classes') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('teacher-portal/classes*') ? 'border-white' : 'border-transparent' }}">
+                        My Classes
+                    </a>
+                    <a href="{{ url('/grades/encode') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('grades/encode*') || request()->is('grades') ? 'border-white' : 'border-transparent' }}">
+                        Encode Grades
+                    </a>
+                    <a href="{{ url('/teacher-portal/reports') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('teacher-portal/reports*') ? 'border-white' : 'border-transparent' }}">
+                        Reports
+                    </a>
+                    
+                @elseif(auth()->user()->role === 'student')
+                    <!-- STUDENT NAVIGATION -->
+                    <a href="{{ url('/portal/grades') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600 border-b-2 {{ request()->is('portal/grades*') ? 'border-white' : 'border-transparent' }}">
+                        My Grades
+                    </a>
+                @endif
+            @else
+                <!-- GUEST NAVIGATION -->
+                <a href="{{ url('/portal/login') }}" class="px-3 py-4 text-sm font-medium hover:bg-blue-600">
+                    Login
+                </a>
+            @endauth
+        </div>
+    </div>
+</nav>
 
         <!-- Page Content -->
         <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-6">
@@ -163,5 +207,83 @@
             </div>
         </footer>
     </div>
+    
+    <!-- Role-Based Access Control Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Clear browser history on role-sensitive pages to prevent back button access
+            if (typeof history.replaceState === 'function') {
+                const userRole = '{{ auth()->check() ? auth()->user()->role : "guest" }}';
+                const currentPath = window.location.pathname;
+                
+                // Define role-specific allowed paths
+                const rolePermissions = {
+                    'admin': ['/admin/', '/sf/', '/grades/view-only', '/books', '/attendance/reports', '/classes'],
+                    'adviser': ['/dashboard', '/classes', '/students', '/attendance', '/sf/', '/grades/view-only'],
+                    'teacher': ['/teacher-portal', '/grades'],
+                    'student': ['/portal/grades', '/grades/view'],
+                    'guest': ['/portal/login', '/login', '/']
+                };
+                
+                // Check if current user has access to current path
+                function hasAccess(role, path) {
+                    if (!rolePermissions[role]) return false;
+                    return rolePermissions[role].some(allowedPath => path.startsWith(allowedPath));
+                }
+                
+                // Redirect if unauthorized access detected
+                if (!hasAccess(userRole, currentPath)) {
+                    console.warn('Unauthorized access detected, redirecting...');
+                    switch(userRole) {
+                        case 'admin':
+                            window.location.replace('/admin/dashboard');
+                            break;
+                        case 'adviser':
+                            window.location.replace('/dashboard');
+                            break;
+                        case 'teacher':
+                            window.location.replace('/teacher-portal');
+                            break;
+                        case 'student':
+                            window.location.replace('/portal/grades');
+                            break;
+                        default:
+                            window.location.replace('/portal/login');
+                    }
+                }
+                
+                // Clear history to prevent back button exploitation
+                history.replaceState(null, null, currentPath);
+            }
+            
+            // Show warning messages if they exist
+            @if(session('warning'))
+                alert('{{ session('warning') }}');
+            @endif
+            
+            // Prevent context menu and certain key combinations for security
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+            
+            
+        });
+        
+        // Handle logout with session cleanup
+        function secureLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear any cached data
+                if (typeof sessionStorage !== 'undefined') {
+                    sessionStorage.clear();
+                }
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.clear();
+                }
+                
+                // Submit logout form
+                document.querySelector('form[action*="logout"]').submit();
+            }
+        }
+    </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Student;
 use App\Models\SchoolClass;
+use App\Models\Grade;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -91,16 +92,22 @@ class StudentController extends Controller
         if (!Auth::check() || !in_array(Auth::user()->role, ['admin', 'adviser'])) {
             abort(403, 'Only administrators and advisers can enroll students.');
         }
-
-        $classes = SchoolClass::where('is_active', true)
-                             ->orderBy('grade_level')
-                             ->orderBy('section')
-                             ->get();
-
+    
+        $query = SchoolClass::where('is_active', true)
+            ->orderBy('grade_level')
+            ->orderBy('section');
+    
+        if (Auth::user()->role === 'adviser') {
+          
+            $query->where('adviser_id', Auth::id());
+        }
+    
+        $classes = $query->get();
         $selectedClassId = $request->get('class_id');
-
+    
         return view('students.create', compact('classes', 'selectedClassId'));
     }
+    
 
     /**
      * Store a newly created student
@@ -483,5 +490,89 @@ class StudentController extends Controller
                 'message' => 'Error transferring student: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function grades(Request $request)
+    {
+        // Get the authenticated user
+        $user = Auth::user();
+        
+        // Get the associated student record - try multiple methods
+        $student = null;
+        
+        // Method 1: Direct relationship
+        if ($user->student) {
+            $student = $user->student;
+        }
+        
+        // Method 2: Find by LRN = username
+        if (!$student) {
+            $student = Student::where('lrn', $user->username)->first();
+        }
+        
+        // Method 3: Find by name matching
+        if (!$student) {
+            $student = Student::whereRaw("CONCAT(first_name, ' ', last_name) = ?", [$user->name])->first();
+        }
+        
+        // Method 4: Find by username in student table
+        if (!$student) {
+            $student = Student::where('lrn', $user->username)->first();
+        }
+        
+        if (!$student) {
+            return redirect()->back()->withErrors(['error' => 'Student record not found.']);
+        }
+    
+        // Get grades for the current academic year
+        $academicYear = '2025-2026';
+        $quarter = $request->get('quarter', '1st Quarter');
+    
+        // Get grades for the student for the current academic year and quarter
+        $grades = Grade::with(['subject'])
+            ->where('student_id', $student->id)
+            ->where('academic_year', $academicYear)
+            ->where('grading_period', $quarter)
+            ->orderBy('subject_id')
+            ->get();
+    
+        // If this is an AJAX request, return JSON data
+        if ($request->ajax() || $request->wantsJson()) {
+            // Prepare the data for the response
+            $gradesData = [];
+            foreach ($grades as $grade) {
+                $gradesData[] = [
+                    'subject' => $grade->subject->name ?? 'N/A',
+                    'final_rating' => $grade->final_rating,
+                    'remarks' => $grade->remarks,
+                    'passed' => $grade->final_rating >= 75
+                ];
+            }
+            
+            // Calculate summary data
+            $summary = [
+                'general_average' => $grades->count() > 0 ? $grades->avg('final_rating') : 0,
+                'highest_grade' => $grades->count() > 0 ? $grades->max('final_rating') : 0,
+                'subjects_passed' => $grades->where('final_rating', '>=', 75)->count(),
+                'total_subjects' => $grades->count(),
+                'pass_rate' => $grades->count() > 0 ? ($grades->where('final_rating', '>=', 75)->count() / $grades->count()) * 100 : 0
+            ];
+            
+            // Get highest grade subject name
+            if ($grades->count() > 0) {
+                $highestGradeSubject = $grades->where('final_rating', $grades->max('final_rating'))->first();
+                $summary['highest_grade_subject'] = $highestGradeSubject->subject->name ?? 'N/A';
+            } else {
+                $summary['highest_grade_subject'] = 'N/A';
+            }
+            
+            return response()->json([
+                'grades' => $gradesData,
+                'summary' => $summary,
+                'quarter' => $quarter
+            ]);
+        }
+    
+        return view('portal.grades', compact('student', 'grades', 'academicYear', 'quarter'));
     }
 }

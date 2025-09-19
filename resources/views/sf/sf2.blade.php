@@ -4,73 +4,110 @@
 <div class="mb-6">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-900">SF2 - Enrollment & Attendance</h1>
-            <p class="text-gray-600">Daily Attendance Record of Learners</p>
+            <h1 class="text-2xl font-bold text-gray-900">SF2 - Daily Attendance Report</h1>
+            <p class="text-gray-600">Dynamic Daily Attendance Record of Learners</p>
         </div>
         <div class="flex items-center space-x-4">
             <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
                 Export Excel
             </button>
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium">
-                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path>
-                </svg>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium" onclick="window.print()">
                 Print
             </button>
         </div>
     </div>
 </div>
 
+<!-- Class and Month Selection -->
+<div class="bg-white rounded-lg shadow border border-gray-200 mb-6">
+    <div class="p-6">
+        <form method="GET" action="{{ route('sf.sf2') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div>
+                <label for="class_id" class="block text-sm font-medium text-gray-700 mb-2">Select Class</label>
+                <select name="class_id" id="class_id" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select Class --</option>
+                    @foreach($classes as $class)
+                        <option value="{{ $class->id }}" {{ $selectedClass && $selectedClass->id == $class->id ? 'selected' : '' }}>
+                            {{ $class->class_name }} - {{ $class->adviser->name ?? 'No Adviser' }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div>
+                <label for="month" class="block text-sm font-medium text-gray-700 mb-2">Month</label>
+                <select name="month" id="month" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @foreach($monthOptions as $value => $label)
+                        <option value="{{ $value }}" {{ $selectedMonth == $value ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div>
+                <label for="year" class="block text-sm font-medium text-gray-700 mb-2">Year</label>
+                <select name="year" id="year" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @foreach($yearOptions as $year)
+                        <option value="{{ $year }}" {{ $selectedYear == $year ? 'selected' : '' }}>{{ $year }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            <div class="flex items-end">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                    Generate Report
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if($selectedClass)
 <!-- School Information Header -->
 <div class="bg-white rounded-lg shadow border border-gray-200 mb-6">
     <div class="p-6">
         <div class="text-center mb-6">
             <h2 class="text-lg font-bold text-gray-900">DAILY ATTENDANCE RECORD OF LEARNERS</h2>
             <p class="text-sm text-gray-600">(To be accomplished by the Class Adviser)</p>
+            <div class="mt-2 text-sm text-blue-600 font-medium">
+                Real-time data from {{ $monthOptions[$selectedMonth] }} {{ $selectedYear }}
+            </div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">School:</span>
-                    <span class="text-gray-900">Maharlika National High School</span>
+                    <span class="text-gray-900">{{ $schoolInfo['school_name'] }}</span>
                 </div>
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">School ID:</span>
-                    <span class="text-gray-900">304866</span>
+                    <span class="text-gray-900">{{ $schoolInfo['school_id'] }}</span>
                 </div>
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">Division:</span>
-                    <span class="text-gray-900">Division of Quezon</span>
+                    <span class="text-gray-900">{{ $schoolInfo['division'] }}</span>
                 </div>
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">Region:</span>
-                    <span class="text-gray-900">Region IV-A (CALABARZON)</span>
+                    <span class="text-gray-900">{{ $schoolInfo['region'] }}</span>
                 </div>
             </div>
             <div class="space-y-2">
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">Grade & Section:</span>
-                    <span class="text-gray-900">Grade 7 - Section A</span>
+                    <span class="text-gray-900">{{ $selectedClass->class_name }}</span>
                 </div>
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">School Year:</span>
-                    <span class="text-gray-900">2025-2026</span>
+                    <span class="text-gray-900">{{ $selectedClass->school_year }}</span>
                 </div>
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">Class Adviser:</span>
-                    <span class="text-gray-900">Maria Santos</span>
+                    <span class="text-gray-900">{{ $selectedClass->adviser->name ?? 'Not Assigned' }}</span>
                 </div>
                 <div class="flex">
                     <span class="font-medium text-gray-700 w-32">Month:</span>
-                    <select class="border border-gray-300 rounded px-2 py-1 text-sm">
-                        <option value="september">September 2025</option>
-                        <option value="october">October 2025</option>
-                        <option value="november">November 2025</option>
-                    </select>
+                    <span class="text-gray-900">{{ $monthOptions[$selectedMonth] }} {{ $selectedYear }}</span>
                 </div>
             </div>
         </div>
@@ -80,186 +117,102 @@
 <!-- Attendance Record -->
 <div class="bg-white rounded-lg shadow border border-gray-200">
     <div class="p-6">
-        <div class="overflow-x-auto">
-            <table class="min-w-full border-collapse border border-gray-400">
-                <thead>
-                    <tr class="bg-gray-100">
-                        <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">No.</th>
-                        <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center min-w-48">LEARNER'S NAME<br>(Last Name, First Name, Middle Name)</th>
-                        <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">LRN</th>
-                        <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">SEX<br>(M/F)</th>
-                        <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">DATE OF<br>ENROLLMENT</th>
-                        <th colspan="31" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">DAYS OF THE MONTH</th>
-                        <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">TOTAL<br>PRESENT</th>
-                        <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">TOTAL<br>ABSENT</th>
-                        <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">REMARKS</th>
-                    </tr>
-                    <tr class="bg-gray-100">
-                        @for($day = 1; $day <= 31; $day++)
-                        <th class="border border-gray-400 px-1 py-1 text-xs font-medium text-gray-700 text-center w-6">{{ $day }}</th>
-                        @endfor
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Sample Student 1 -->
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">1</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs">DELA CRUZ, Juan Miguel Santos</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">304866202500001</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">M</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">08/15/2025</td>
-                        @for($day = 1; $day <= 31; $day++)
-                        <td class="border border-gray-400 px-1 py-1 text-xs text-center">
-                            @if($day <= 20)
-                                <span class="text-green-600 font-bold">✓</span>
-                            @elseif($day == 21)
-                                <span class="text-red-600 font-bold">✗</span>
-                            @elseif($day <= 30)
-                                <span class="text-green-600 font-bold">✓</span>
-                            @endif
-                        </td>
-                        @endfor
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold">29</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold">1</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs">Good performance</td>
-                    </tr>
-                    
-                    <!-- Sample Student 2 -->
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">2</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs">SANTOS, Maria Luz Garcia</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">304866202500002</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">F</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">08/15/2025</td>
-                        @for($day = 1; $day <= 31; $day++)
-                        <td class="border border-gray-400 px-1 py-1 text-xs text-center">
-                            @if($day <= 30)
-                                <span class="text-green-600 font-bold">✓</span>
-                            @endif
-                        </td>
-                        @endfor
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold">30</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold">0</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs">Perfect attendance</td>
-                    </tr>
-                    
-                    <!-- Sample Student 3 -->
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">3</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs">RODRIGUEZ, Ana Marie Cruz</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">304866202500003</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">F</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">08/16/2025</td>
-                        @for($day = 1; $day <= 31; $day++)
-                        <td class="border border-gray-400 px-1 py-1 text-xs text-center">
-                            @if($day <= 15)
-                                <span class="text-green-600 font-bold">✓</span>
-                            @elseif($day == 16 || $day == 23)
-                                <span class="text-red-600 font-bold">✗</span>
-                            @elseif($day <= 30)
-                                <span class="text-green-600 font-bold">✓</span>
-                            @endif
-                        </td>
-                        @endfor
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold">28</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold">2</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs">Excused absences</td>
-                    </tr>
-                    
-                    <!-- Add more rows for additional students -->
-                    @for($i = 4; $i <= 42; $i++)
-                    <tr class="hover:bg-gray-50">
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">{{ $i }}</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs">STUDENT{{ $i }}, Name{{ $i }} Middle{{ $i }}</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">30486620250000{{ $i }}</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">{{ $i % 2 == 0 ? 'F' : 'M' }}</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center">08/15/2025</td>
-                        @for($day = 1; $day <= 31; $day++)
-                        <td class="border border-gray-400 px-1 py-1 text-xs text-center">
-                            @if($day <= 30)
-                                @if(rand(1, 10) > 1)
-                                    <span class="text-green-600 font-bold">✓</span>
+        @if($students->isEmpty())
+            <div class="text-center py-8">
+                <p class="text-gray-500">No students found in this class.</p>
+            </div>
+        @else
+            <div class="overflow-x-auto">
+                <table class="min-w-full border-collapse border border-gray-400">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">No.</th>
+                            <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center min-w-48">LEARNER'S NAME</th>
+                            <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">LRN</th>
+                            <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">SEX</th>
+                            <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">ENROLLMENT</th>
+                            <th colspan="{{ $daysInMonth }}" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">DAYS OF THE MONTH</th>
+                            <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">PRESENT</th>
+                            <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">ABSENT</th>
+                            <th rowspan="2" class="border border-gray-400 px-3 py-2 text-xs font-medium text-gray-700 text-center">RATE</th>
+                        </tr>
+                        <tr class="bg-gray-100">
+                            @for($day = 1; $day <= $daysInMonth; $day++)
+                            <th class="border border-gray-400 px-1 py-1 text-xs font-medium text-gray-700 text-center w-6">{{ $day }}</th>
+                            @endfor
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($students as $index => $student)
+                        <tr class="hover:bg-gray-50">
+                            <td class="border border-gray-400 px-2 py-1 text-xs text-center">{{ $index + 1 }}</td>
+                            <td class="border border-gray-400 px-2 py-1 text-xs">
+                                {{ strtoupper($student->last_name) }}, {{ $student->first_name }}
+                            </td>
+                            <td class="border border-gray-400 px-2 py-1 text-xs text-center">{{ $student->lrn }}</td>
+                            <td class="border border-gray-400 px-2 py-1 text-xs text-center">{{ $student->gender == 'Male' ? 'M' : 'F' }}</td>
+                            <td class="border border-gray-400 px-2 py-1 text-xs text-center">{{ $student->created_at ? $student->created_at->format('m/d/Y') : 'N/A' }}</td>
+                            
+                            @for($day = 1; $day <= $daysInMonth; $day++)
+                            <td class="border border-gray-400 px-1 py-1 text-xs text-center">
+                                @if(isset($attendanceData[$student->id][$day]))
+                                    @php $status = $attendanceData[$student->id][$day]; @endphp
+                                    @if($status === 'present')
+                                        <span class="text-green-600 font-bold">✓</span>
+                                    @elseif($status === 'absent')
+                                        <span class="text-red-600 font-bold">✗</span>
+                                    @elseif($status === 'late')
+                                        <span class="text-yellow-600 font-bold">L</span>
+                                    @elseif($status === 'excused')
+                                        <span class="text-blue-600 font-bold">E</span>
+                                    @else
+                                        <span class="text-gray-400">-</span>
+                                    @endif
                                 @else
-                                    <span class="text-red-600 font-bold">✗</span>
+                                    <span class="text-gray-300">-</span>
                                 @endif
-                            @endif
-                        </td>
-                        @endfor
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold">{{ rand(25, 30) }}</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold">{{ rand(0, 5) }}</td>
-                        <td class="border border-gray-400 px-2 py-1 text-xs">Regular</td>
-                    </tr>
-                    @endfor
-                </tbody>
-            </table>
-        </div>
-        
-        <!-- Summary Section -->
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="space-y-2">
-                <h4 class="font-semibold text-gray-900">Monthly Summary</h4>
-                <div class="text-sm space-y-1">
-                    <div class="flex justify-between">
-                        <span>Total Enrolled Students:</span>
-                        <span class="font-bold">42</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>Total School Days:</span>
-                        <span class="font-bold">30</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>Average Daily Attendance:</span>
-                        <span class="font-bold">40.2 (95.7%)</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span>Perfect Attendance:</span>
-                        <span class="font-bold">15 students</span>
-                    </div>
-                </div>
+                            </td>
+                            @endfor
+                            
+                            @php $stats = $monthlyStats[$student->id] ?? ['total_present' => 0, 'total_absent' => 0, 'attendance_rate' => 0]; @endphp
+                            <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold text-green-600">{{ $stats['total_present'] }}</td>
+                            <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold text-red-600">{{ $stats['total_absent'] }}</td>
+                            <td class="border border-gray-400 px-2 py-1 text-xs text-center font-bold 
+                                {{ $stats['attendance_rate'] >= 95 ? 'text-green-600' : ($stats['attendance_rate'] >= 85 ? 'text-yellow-600' : 'text-red-600') }}">
+                                {{ $stats['attendance_rate'] }}%
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
             
-            <div class="space-y-2">
-                <h4 class="font-semibold text-gray-900">Legend</h4>
-                <div class="text-sm space-y-1">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-green-600 font-bold">✓</span>
-                        <span>Present</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-red-600 font-bold">✗</span>
-                        <span>Absent</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-yellow-600 font-bold">L</span>
-                        <span>Late</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <span class="text-blue-600 font-bold">E</span>
-                        <span>Excused</span>
-                    </div>
-                </div>
+            <!-- Note about real-time data -->
+            <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                <p class="text-sm text-blue-700">
+                    <strong>📊 Real-time Data:</strong> This SF2 report automatically reflects attendance data encoded by advisers. 
+                    When you mark attendance, it instantly updates this form - no manual editing required!
+                </p>
             </div>
-        </div>
-        
-        <!-- Signature Section -->
-        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 border-t border-gray-200 pt-6">
-            <div class="text-center">
-                <div class="border-b border-gray-400 mb-2 pb-8"></div>
-                <p class="text-sm font-medium">Class Adviser</p>
-                <p class="text-xs text-gray-600">Maria Santos</p>
-            </div>
-            <div class="text-center">
-                <div class="border-b border-gray-400 mb-2 pb-8"></div>
-                <p class="text-sm font-medium">Principal</p>
-                <p class="text-xs text-gray-600">Name and Signature</p>
-            </div>
-            <div class="text-center">
-                <div class="border-b border-gray-400 mb-2 pb-8"></div>
-                <p class="text-sm font-medium">Date</p>
-                <p class="text-xs text-gray-600">{{ date('m/d/Y') }}</p>
-            </div>
-        </div>
+        @endif
     </div>
 </div>
+@else
+    <div class="bg-white rounded-lg shadow border border-gray-200">
+        <div class="p-8 text-center">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Select a Class</h3>
+            <p class="text-gray-600">Please select a class and month to generate the SF2 Daily Attendance Report.</p>
+        </div>
+    </div>
+@endif
+
+<script>
+document.getElementById('class_id').addEventListener('change', function() {
+    if (this.value) {
+        this.form.submit();
+    }
+});
+
+</script>
 
 @endsection
