@@ -75,18 +75,8 @@
                         </button>
                     </form>
 
-                    <!-- Demo Credentials -->
-                    <!-- <div class="mt-6 p-4 bg-blue-50 rounded border border-blue-200">
-                        <h4 class="text-sm font-medium text-blue-900 mb-2">Demo Credentials</h4>
-                        <div class="text-sm text-blue-700 space-y-1">
-                            <div><strong>Administrator:</strong> admin1 / password</div>
-                            <div><strong>Adviser 1:</strong> adviser1 / password</div>
-                            <div><strong>Adviser 2:</strong> adviser2 / password</div>
-                            <div><strong>Subject Teacher:</strong> teacher1 / password</div>
-                            <div><strong>Student 1:</strong> student1 / password</div>
-                            <div><strong>Student 2:</strong> student2 / password</div>
-                        </div>
-                    </div> -->
+              
+               
 
                     <div class="mt-8 p-4 bg-gray-50 rounded border">
                         <h3 class="font-medium text-gray-800 mb-2">Forgot password?</h3>
